@@ -1,4 +1,4 @@
-# copilotignore.vim
+# vim-copilot-ignore
 
 A Vim plugin to automatically disable Copilot in buffers matching patterns specified in `.copilotignore` or `~/.copilotignore`.
 
