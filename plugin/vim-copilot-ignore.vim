@@ -18,7 +18,6 @@ function! s:ReadIgnorePatterns(filepath) abort
       call add(l:patterns, substitute(l:line, '^\s*\(.\{-}\)\s*$', '\1', ''))
     endfor
   endif
-  echom "Read patterns: " . join(l:patterns, ', ')
   return l:patterns
 endfunction
 
@@ -32,13 +31,10 @@ endfunction
 " Function to check if a file matches any simple wildcard pattern
 function! s:MatchesAnyPattern(filename, patterns) abort
   let l:only_filename = fnamemodify(a:filename, ':t')
-  echom "Trying to match against: " . l:only_filename
 
   for l:pattern in a:patterns
     let l:regex = s:ConvertWildcardToRegex(l:pattern)
-    echom "Trying regex: " . l:regex
     if l:only_filename =~ l:regex
-      echom "Matched pattern: " . l:pattern
       return 1
     endif
   endfor
@@ -52,11 +48,8 @@ function! s:CheckAndDisableCopilot() abort
   let l:allPatterns = l:localPatterns + l:globalPatterns
   let l:bufferName = expand('%:p')
 
-  echom "Buffer name: " . l:bufferName
-
   if s:MatchesAnyPattern(l:bufferName, l:allPatterns)
     let b:copilot_enabled = v:false
-    echom "Copilot disabled for this buffer."
   endif
 endfunction
 
