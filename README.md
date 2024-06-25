@@ -12,7 +12,7 @@ Use your favorite plugin manager.
 For example, using [vim-plug](https://github.com/junegunn/vim-plug):
 
 ```vimscript
-Plug 'panozzaj/vim-copilot-ignore.vim'
+Plug 'panozzaj/vim-copilot-ignore'
 ```
 
 ## Usage
