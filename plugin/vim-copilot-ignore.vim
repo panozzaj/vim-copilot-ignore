@@ -26,11 +26,9 @@ endfunction
 
 " Function to check if a file matches any simple wildcard pattern
 function! s:MatchesAnyPattern(filename, patterns) abort
-  let l:only_filename = fnamemodify(a:filename, ':t')
-
   for l:pattern in a:patterns
-    let l:regex = glob2regex(l:pattern)
-    if l:only_filename =~# l:regex
+    let l:regex = glob2regpat(l:pattern)
+    if a:filename =~# l:regex
       return 1
     endif
   endfor
