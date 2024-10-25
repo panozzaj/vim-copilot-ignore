@@ -13,19 +13,15 @@ let g:loaded_copilotignore = 1
 function! s:ReadIgnorePatterns(filepath) abort
   let l:patterns = []
   if filereadable(a:filepath)
+    let filefolder = fnamemodify(a:filepath, ':p:h')
+    let local = filefolder ==# $HOME ? v:false : v:true
     let l:lines = readfile(a:filepath)
     for l:line in l:lines
-      call add(l:patterns, substitute(l:line, '^\s*\(.\{-}\)\s*$', '\1', ''))
+      call add(l:patterns,
+            \ (local ? filefolder..(!exists("+shellslash") || &shellslash ? '/' : '\') : '')..trim(l:line))
     endfor
   endif
   return l:patterns
-endfunction
-
-" Function to convert a simple wildcard pattern to a Vim-compatible regex
-function! s:ConvertWildcardToRegex(pattern) abort
-  let l:regex = substitute(a:pattern, '\*', '.*', 'g')
-  let l:regex = substitute(l:regex, '?', '.', 'g')
-  return l:regex
 endfunction
 
 " Function to check if a file matches any simple wildcard pattern
@@ -33,8 +29,8 @@ function! s:MatchesAnyPattern(filename, patterns) abort
   let l:only_filename = fnamemodify(a:filename, ':t')
 
   for l:pattern in a:patterns
-    let l:regex = s:ConvertWildcardToRegex(l:pattern)
-    if l:only_filename =~ l:regex
+    let l:regex = glob2regex(l:pattern)
+    if l:only_filename =~# l:regex
       return 1
     endif
   endfor
@@ -56,5 +52,5 @@ endfunction
 " Automatically run the function when entering a buffer
 augroup copilotignore
   autocmd!
-  autocmd BufEnter * call s:CheckAndDisableCopilot()
+  autocmd BufNew,BufRead * call s:CheckAndDisableCopilot()
 augroup END
