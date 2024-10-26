@@ -17,7 +17,12 @@ function! s:FindCopilotIgnore(dir) abort
         if filereadable(current_dir..s:slash..'.copilotignore')
             return current_dir..s:slash..'.copilotignore'
         endif
-        let current_dir = fnamemodify(current_dir, ':h')
+        let parent_dir = fnamemodify(current_dir, ':h')
+        if current_dir ==# parent_dir
+          return ''
+        else
+          let current_dir = parent_dir
+        endif
     endwhile
     return ''
 endfunction
