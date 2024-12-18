@@ -1,7 +1,7 @@
 " copilotignore.vim - Disable Copilot for ignored files
 "
 " Maintainer:   Anthony Panozzo
-" Version:      1.0
+" Version:      1.1
 " License:      MIT
 
 if exists('g:loaded_copilotignore')
