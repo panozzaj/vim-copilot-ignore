@@ -12,19 +12,19 @@ let g:loaded_copilotignore = 1
 let s:slash = !exists("+shellslash") || &shellslash ? '/' : '\'
 
 function! s:FindCopilotIgnore(dir) abort
-    let current_dir = a:dir
-    while !(current_dir ==# $HOME || current_dir ==# '/' || current_dir =~# '^[A-Za-z]:\\\?$' || current_dir ==# '\\')
-        if filereadable(current_dir..s:slash..'.copilotignore')
-            return current_dir..s:slash..'.copilotignore'
-        endif
-        let parent_dir = fnamemodify(current_dir, ':h')
-        if current_dir ==# parent_dir
-          return ''
-        else
-          let current_dir = parent_dir
-        endif
-    endwhile
-    return ''
+  let current_dir = a:dir
+  while !(current_dir ==# $HOME || current_dir ==# '/' || current_dir =~# '^[A-Za-z]:\\\?$' || current_dir ==# '\\')
+    if filereadable(current_dir..s:slash..'.copilotignore')
+      return current_dir..s:slash..'.copilotignore'
+    endif
+    let parent_dir = fnamemodify(current_dir, ':h')
+    if current_dir ==# parent_dir
+      return ''
+    else
+      let current_dir = parent_dir
+    endif
+  endwhile
+  return ''
 endfunction
 
 " Function to read ignore patterns from a file
