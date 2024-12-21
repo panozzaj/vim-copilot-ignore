@@ -1,11 +1,31 @@
 # vim-copilot-ignore
 
-A Vim plugin to automatically disable Copilot in buffers matching patterns specified in a `.copilotignore` of the current work dir or a global `~/.copilotignore`.
-Here `or` is meant non-exclusively, that is, the patterns of both files are checked, and the glob patterns are documented at `:help wildcards`.
-The patterns of the global ignore file check for the whole file path whereas that of the local one for that relative to its folder, for example `/home/user/repo/subfolder/name.txt` is only checked against `subfolder/name.txt` if the pattern was given in `/home/user/repo/.copilotignore`, whereas if it was given in `~/.copilotignore`, then against the full path `/home/user/repo/subfolder/name.txt`.
+A Vim plugin to automatically disable Copilot in buffers matching user-specified patterns.
 
-One good use case is sensitive files. For example, if you have API keys in a local `.env` (dotenv) file, it would
-would be more secure to avoid sending the contents of that file to a server.
+One good use case is disabling Copilot for sensitive files. For example, if you have API keys in a local `.env` (dotenv) file, it would
+would be more secure to avoid sending the contents of that file to a server. Also, you're unlikely to get useful completions from it.
+
+## Ignore file details
+
+Each time a buffer is created or read, the plugin will check to see if Copilot should be disbled.
+
+We will obtain Copilot ignore file patterns from two sources, and use the union of the patterns:
+
+1. global: `~/.copilotignore` file
+2. subdirectory / project-specific: the first `.copilotignore` file found, starting in the directory of the buffer and traversing up
+
+For example, if you had the following file tree:
+
+```
+/home/user/.copilotignore                (global)
+/home/user/repo/.copilotignore           (local, but not first encountered)
+/home/user/repo/subfolder/.copilotignore (local)
+/home/user/repo/subfolder/some_file.txt  (file being edited)
+```
+
+and were editing a file in or under `/home/user/repo/subfolder/`, the plugin would use the patterns from `/home/user/.copilotignore` and `/home/user/repo/subfolder/.copilotignore`.
+
+If a pattern matches the full path of the file, Copilot will be disabled for that file. Glob patterns are documented at `:help wildcards`.
 
 ## Installation
 
