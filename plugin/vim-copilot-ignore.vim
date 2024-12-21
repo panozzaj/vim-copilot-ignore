@@ -4,10 +4,14 @@
 " Version:      1.1
 " License:      MIT
 
-if exists('g:loaded_copilotignore')
+if exists('g:copilotignore_loaded')
   finish
 endif
-let g:loaded_copilotignore = 1
+let g:copilotignore_loaded = 1
+
+if exists('g:copilotignore_verbose') && g:copilotignore_verbose
+  echo 'Copilot ignore plugin loaded'
+endif
 
 let s:slash = !exists("+shellslash") || &shellslash ? '/' : '\'
 
@@ -59,6 +63,9 @@ function! s:CheckAndDisableCopilot() abort
 
   if s:MatchesAnyPattern(l:bufferName, l:localPatterns + l:globalPatterns)
     let b:copilot_enabled = v:false
+    if exists('g:copilotignore_verbose') && g:copilotignore_verbose
+      echo 'Copilot disabled for file: ' l:bufferName
+    endif
   endif
 endfunction
 
