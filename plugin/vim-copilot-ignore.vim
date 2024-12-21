@@ -17,6 +17,7 @@ let s:slash = !exists("+shellslash") || &shellslash ? '/' : '\'
 
 function! s:FindCopilotIgnore(dir) abort
   let current_dir = a:dir
+
   while !(current_dir ==# $HOME || current_dir ==# '/' || current_dir =~# '^[A-Za-z]:\\\?$' || current_dir ==# '\\')
     if filereadable(current_dir..s:slash..'.copilotignore')
       return current_dir..s:slash..'.copilotignore'
@@ -28,19 +29,23 @@ function! s:FindCopilotIgnore(dir) abort
       let current_dir = parent_dir
     endif
   endwhile
+
   return ''
 endfunction
 
 " Function to read ignore patterns from a file
 function! s:ReadIgnorePatterns(filepath) abort
   if !filereadable(a:filepath) | return [] | endif
+
   let filefolder = fnamemodify(a:filepath, ':p:h')
   let local = filefolder ==# $HOME ? v:false : v:true
   let lines = readfile(a:filepath)
   let patterns = []
+
   for line in lines
     call add(patterns, (local ? filefolder..s:slash : '')..trim(line))
   endfor
+
   return patterns
 endfunction
 
@@ -52,6 +57,7 @@ function! s:MatchesAnyPattern(filename, patterns) abort
       return 1
     endif
   endfor
+
   return 0
 endfunction
 
